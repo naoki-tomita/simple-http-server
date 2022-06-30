@@ -30,9 +30,9 @@ export class HttpServer {
           response.setBody(e.message || "internal server error");
         }
         // 7 byte ???
-        // deno-lint-ignore no-explicit-any
         response.setHeader(
           "content-length",
+          // deno-lint-ignore no-explicit-any
           (new TextEncoder().encode((response as any).body).byteLength - 7)
             .toString(),
         );

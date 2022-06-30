@@ -9,10 +9,15 @@ Accept-Encoding: gzip, deflate
 Connection: Keep-Alive
 
 `.trimStart().split("\n").join("\r\n");
-  const request = new HttpRequestFactory().build(new TextEncoder().encode(text))!;
+  const request = new HttpRequestFactory().build(
+    new TextEncoder().encode(text),
+  )!;
   assertEquals(request.method, "GET");
   assertEquals(request.url, "/foo/bar");
-  assertEquals(request.headers, { "accept-encoding": "gzip, deflate", "connection": "Keep-Alive" });
+  assertEquals(request.headers, {
+    "accept-encoding": "gzip, deflate",
+    "connection": "Keep-Alive",
+  });
 });
 
 Deno.test("create HttpRequest with body urlencoded", () => {
@@ -24,10 +29,16 @@ Content-Length: 17
 
 this=is&body=test
 `.trim().split("\n").join("\r\n");
-  const request = new HttpRequestFactory().build(new TextEncoder().encode(text))!;
+  const request = new HttpRequestFactory().build(
+    new TextEncoder().encode(text),
+  )!;
   assertEquals(request.method, "POST");
   assertEquals(request.url, "/post");
-  assertEquals(request.headers, { "host": "www.xxx.zzz", "content-type": "application/x-www-form-urlencoded", "content-length": "17" });
+  assertEquals(request.headers, {
+    "host": "www.xxx.zzz",
+    "content-type": "application/x-www-form-urlencoded",
+    "content-length": "17",
+  });
   assertEquals(request.body, { this: "is", body: "test" });
 });
 
@@ -40,18 +51,24 @@ Content-Length: 17
 
 { "string": "bar", "number": 12, "boolean": false, "null": null, "object": { "foo": "bar" }, "array": [1, 2, "3", true, null, "text"] }
 `.trim().split("\n").join("\r\n");
-  const request = new HttpRequestFactory().build(new TextEncoder().encode(text))!;
+  const request = new HttpRequestFactory().build(
+    new TextEncoder().encode(text),
+  )!;
   assertEquals(request.method, "POST");
   assertEquals(request.url, "/post");
-  assertEquals(request.headers, { "host": "www.xxx.zzz", "content-type": "application/json", "content-length": "17" });
+  assertEquals(request.headers, {
+    "host": "www.xxx.zzz",
+    "content-type": "application/json",
+    "content-length": "17",
+  });
   assertEquals(request.body, {
     string: "bar",
     number: 12,
     boolean: false,
     null: null,
     object: {
-      foo: "bar"
+      foo: "bar",
     },
-    array: [1, 2, "3", true, null, "text"]
+    array: [1, 2, "3", true, null, "text"],
   });
 });
