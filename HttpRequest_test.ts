@@ -1,6 +1,6 @@
 import { assertEquals } from "https://deno.land/std@0.145.0/testing/asserts.ts";
 
-import { HttpRequest } from "./HttpRequest.ts";
+import { HttpRequestFactory } from "./HttpRequest.ts";
 
 Deno.test("create HttpRequest no body", () => {
   const text = `
@@ -9,7 +9,7 @@ Accept-Encoding: gzip, deflate
 Connection: Keep-Alive
 
 `.trimStart().split("\n").join("\r\n");
-  const request = HttpRequest.from(new TextEncoder().encode(text))!;
+  const request = new HttpRequestFactory().build(new TextEncoder().encode(text))!;
   assertEquals(request.method, "GET");
   assertEquals(request.url, "/foo/bar");
   assertEquals(request.headers, { "accept-encoding": "gzip, deflate", "connection": "Keep-Alive" });
@@ -24,7 +24,7 @@ Content-Length: 17
 
 this=is&body=test
 `.trim().split("\n").join("\r\n");
-  const request = HttpRequest.from(new TextEncoder().encode(text))!;
+  const request = new HttpRequestFactory().build(new TextEncoder().encode(text))!;
   assertEquals(request.method, "POST");
   assertEquals(request.url, "/post");
   assertEquals(request.headers, { "host": "www.xxx.zzz", "content-type": "application/x-www-form-urlencoded", "content-length": "17" });
@@ -40,7 +40,7 @@ Content-Length: 17
 
 { "string": "bar", "number": 12, "boolean": false, "null": null, "object": { "foo": "bar" }, "array": [1, 2, "3", true, null, "text"] }
 `.trim().split("\n").join("\r\n");
-  const request = HttpRequest.from(new TextEncoder().encode(text))!;
+  const request = new HttpRequestFactory().build(new TextEncoder().encode(text))!;
   assertEquals(request.method, "POST");
   assertEquals(request.url, "/post");
   assertEquals(request.headers, { "host": "www.xxx.zzz", "content-type": "application/json", "content-length": "17" });

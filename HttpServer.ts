@@ -1,8 +1,11 @@
-import { HttpRequest } from "./HttpRequest.ts";
+import { HttpRequest, HttpRequestFactory } from "./HttpRequest.ts";
 import { HttpStatus } from "./HttpResponse.ts";
 import { HttpResponse } from "./HttpResponse.ts";
 
-type Middleware = (request: HttpRequest, response: HttpResponse) => (Promise<HttpResponse> | HttpResponse);
+type Middleware = (
+  request: HttpRequest,
+  response: HttpResponse,
+) => Promise<HttpResponse> | HttpResponse;
 
 export class HttpServer {
   middlewares: Middleware[] = [];
@@ -14,7 +17,7 @@ export class HttpServer {
   async listen(port = 8000) {
     const listener = Deno.listen({ port });
     for await (const connection of listener) {
-      this.parseRequest(connection).then(async request => {
+      this.parseRequest(connection).then(async (request) => {
         let response = new HttpResponse()
           .setStatus(HttpStatus.Ok);
         try {
@@ -26,8 +29,13 @@ export class HttpServer {
           response.setStatus(HttpStatus.InternalServerError);
           response.setBody(e.message || "internal server error");
         }
-        // なぜ7byte多くなるのか
-        response.setHeader("content-length", (new TextEncoder().encode((response as any).body).byteLength - 7).toString());
+        // 7 byte ???
+        // deno-lint-ignore no-explicit-any
+        response.setHeader(
+          "content-length",
+          (new TextEncoder().encode((response as any).body).byteLength - 7)
+            .toString(),
+        );
         if (request.headers["connection"] !== "keep-alive") {
           response.setHeader("connection", "close");
         }
@@ -44,7 +52,7 @@ export class HttpServer {
 
     while ((n = await connection.read(buffer) ?? 0) > 0) {
       chunks = new Uint8Array([...chunks, ...buffer.subarray(0, n)]);
-      const req = HttpRequest.from(chunks);
+      const req = new HttpRequestFactory().build(chunks);
       if (req != null) {
         return req;
       }

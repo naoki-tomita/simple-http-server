@@ -6,13 +6,13 @@ export class HttpStatus {
 
   private constructor(readonly code: number, readonly text: string) {}
   from(code: number): HttpStatus | undefined {
-    return Object.values(HttpStatus).find(status => status.code === code);
+    return Object.values(HttpStatus).find((status) => status.code === code);
   }
 }
 
 export class HttpResponse {
   private status: HttpStatus = HttpStatus.Ok;
-  private headers: { [key: string]: string; } = {
+  private headers: { [key: string]: string } = {
     "content-type": "text/plain",
   };
   private body = "";
@@ -34,6 +34,7 @@ export class HttpResponse {
     return this;
   }
 
+  // deno-lint-ignore ban-types
   setJsonBody(body: {}) {
     this.setBody(JSON.stringify(body));
     this.setHeader("Content-Type", "application/json");
@@ -43,7 +44,7 @@ export class HttpResponse {
   toString() {
     return `
 HTTP/1.1 ${this.status.code} ${this.status.text}
-${Object.entries(this.headers).map(it => `${it[0]}: ${it[1]}`).join("\n")}
+${Object.entries(this.headers).map((it) => `${it[0]}: ${it[1]}`).join("\n")}
 
 ${this.body}
     `.trim();

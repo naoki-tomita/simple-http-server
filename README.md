@@ -1,5 +1,13 @@
-import { HttpServer, HttpStatus } from "./deps.ts";
+# simple-http-server
 
+Denoで書かれたHTTPサーバーライブラリです。 ソケット接続をHTTPリクエストに変換し、レスポンスをソケット接続で返します。
+
+## function
+
+ConnectのようにMiddlewareを書くことで、HTTPサーバーを建てることができます。
+useを複数書くことで、Middlewareを複数連結させることができます。
+
+```ts
 new HttpServer()
   .use((req, res) => {
     console.log("start", Date.now(), req.method, req.url);
@@ -28,3 +36,4 @@ new HttpServer()
     return res;
   })
   .listen(8000);
+```
