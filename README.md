@@ -4,7 +4,7 @@ Denoで書かれたHTTPサーバーライブラリです。 ソケット接続�
 
 ## function
 
-ConnectのようにMiddlewareを書くことで、HTTPサーバーを建てることができます。
+[Connect](https://github.com/senchalabs/connect)のようにMiddlewareを書くことで、HTTPサーバーを建てることができます。
 useを複数書くことで、Middlewareを複数連結させることができます。
 
 ```ts
