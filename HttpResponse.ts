@@ -11,11 +11,11 @@ export class HttpStatus {
 }
 
 export class HttpResponse {
-  private status: HttpStatus = HttpStatus.Ok;
-  private headers: { [key: string]: string } = {
+  status: HttpStatus = HttpStatus.NotFound;
+  headers: { [key: string]: string } = {
     "content-type": "text/plain",
   };
-  private body = "";
+  body = "";
 
   constructor() {}
 

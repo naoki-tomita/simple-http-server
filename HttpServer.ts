@@ -2,7 +2,7 @@ import { HttpRequest, HttpRequestFactory } from "./HttpRequest.ts";
 import { HttpStatus } from "./HttpResponse.ts";
 import { HttpResponse } from "./HttpResponse.ts";
 
-type Middleware = (
+export type Middleware = (
   request: HttpRequest,
   response: HttpResponse,
 ) => Promise<HttpResponse> | HttpResponse;
@@ -29,11 +29,10 @@ export class HttpServer {
           response.setStatus(HttpStatus.InternalServerError);
           response.setBody(e.message || "internal server error");
         }
-        // 7 byte ???
         response.setHeader(
           "content-length",
           // deno-lint-ignore no-explicit-any
-          (new TextEncoder().encode((response as any).body).byteLength - 7)
+          (new TextEncoder().encode((response as any).body).byteLength - 7) // 7 byte ???
             .toString(),
         );
         if (request.headers["connection"] !== "keep-alive") {

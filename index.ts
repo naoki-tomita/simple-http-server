@@ -1,4 +1,4 @@
-import { HttpServer, HttpStatus } from "./deps.ts";
+import { HttpServer, HttpStatus, Middleware } from "./deps.ts";
 
 new HttpServer()
   .use((req, res) => {
@@ -23,8 +23,9 @@ new HttpServer()
       `);
     return res;
   })
+  .use(router.routes())
   .use((req, res) => {
-    console.log("end", Date.now(), req.method, req.url);
+    console.log("end", Date.now(), req.method, req.url, res.status.code);
     return res;
   })
   .listen(8000);
