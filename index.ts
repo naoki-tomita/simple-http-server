@@ -23,7 +23,6 @@ new HttpServer()
       `);
     return res;
   })
-  .use(router.routes())
   .use((req, res) => {
     console.log("end", Date.now(), req.method, req.url, res.status.code);
     return res;
